@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  protect_from_forgery
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   # GET /users
   # GET /users.json
@@ -35,10 +36,10 @@ class UsersController < ApplicationController
       if @user.save
         format.html { redirect_to @user, notice: 'User was successfully updated' }
         format.json { 
-           render :show, status: :ok, location: @user
+           render :show, status: :created, location: @user
         }
       else
-        format.html { render :new}
+        format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
