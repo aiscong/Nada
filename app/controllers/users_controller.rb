@@ -63,6 +63,7 @@ class UsersController < ApplicationController
     end
   end
   
+  # POST /authenticate
   def authenticate
     email = params[:email]
     password = params[:password]
