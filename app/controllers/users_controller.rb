@@ -11,12 +11,6 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.json{
-        render json: @user
-      }
-    end
   end
 
   # GET /users/new
@@ -40,7 +34,7 @@ class UsersController < ApplicationController
         }
       else
         format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :bad_request }
       end
     end
   end
@@ -51,10 +45,10 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
+        format.json { render :show, status: :ok, location: @user } and return
       else
         format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :bad_request } and return
       end
     end
   end
@@ -65,9 +59,31 @@ class UsersController < ApplicationController
     @user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-      format.json { head :no_content }
+      format.json { head :no_content, status: :ok }
     end
   end
+  
+  def authenticate
+    email = params[:email]
+    password = params[:password]
+    if not email or not password
+      render :json => {response:'Missing email or password'}, :status => :bad_request and return
+    end
+
+    user = User.find_by_email(email)
+    #password = @json['password']
+
+    unless user.present?
+      render :json => {message: 'User not found with that email'}, status: :bad_request and return
+    end
+    
+    unless user.authenticate(password)
+      render :json => {message: 'Invalid password for user'}, status: :bad_request and return
+    end
+    @user = user
+    
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
