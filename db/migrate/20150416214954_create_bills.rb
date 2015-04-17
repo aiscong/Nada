@@ -10,6 +10,5 @@ class CreateBills < ActiveRecord::Migration
     
     add_index :bills, :creditor_id
     add_index :bills, :debtor_id
-    add_index, [:creditor_id, :debtor_id, :created_at], unique: true
   end
 end
