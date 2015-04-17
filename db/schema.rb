@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150410014128) do
+ActiveRecord::Schema.define(version: 20150416222652) do
+
+  create_table "bills", force: :cascade do |t|
+    t.integer  "creditor_id"
+    t.integer  "debtor_id"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.decimal  "amount",       default: 0.0
+    t.boolean  "settled",      default: false
+    t.datetime "settled_date"
+  end
+
+  add_index "bills", ["creditor_id"], name: "index_bills_on_creditor_id"
+  add_index "bills", ["debtor_id"], name: "index_bills_on_debtor_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "name"

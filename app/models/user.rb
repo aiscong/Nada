@@ -7,4 +7,12 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
   has_secure_password
   validates :password, length: { minimum: 6 }, presence: true
+  #has_many :unpaid_bills, class_name: "Bill",
+   #                      foreign_key: "debtor_id",
+    #                     dependent:  :destroy
+#  has_many :unrec_bills, class_anme: "Bill",
+ #                        foreign_key: "creditor_id",
+  #                       dependent:  :destroy
+                         
+                           
 end

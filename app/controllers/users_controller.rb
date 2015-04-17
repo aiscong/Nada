@@ -82,7 +82,6 @@ class UsersController < ApplicationController
       render :json => {message: 'Invalid password for user'}, status: :bad_request and return
     end
     @user = user
-    
   end
 
 
