@@ -1,0 +1,1 @@
+json.extract! @bill, :id, :creditor_id, :debtor_id, :amount, :settled, :settled_date
