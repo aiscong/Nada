@@ -83,6 +83,18 @@ class UsersController < ApplicationController
     end
     @user = user
   end
+  
+  def searchUser
+    email = params[:email]
+    if not email
+      render :json => {response: 'Missing email'}, :status => :bad_request and return
+    end
+    user = User.find_by_email(email)
+    unless user.present?
+      render :json => {message: 'User not found with that email'}, status: :bad_request and return
+    end
+    @user = user
+  end
 
 
   private
