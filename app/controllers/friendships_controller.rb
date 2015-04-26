@@ -3,7 +3,7 @@ class FriendshipsController < ApplicationController
   before_action :sign_in_user
   
   def create
-    friend = User.find_by_id(params[:friend_id])
+    friend = User.find_by_email(params[:friend_email])
     unless friend.present?
       render :json => {message: 'Unable to find friend id'}, status: :bad_request and return
     end
