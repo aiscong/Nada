@@ -25,7 +25,6 @@ class BillsController < ApplicationController
   end
   
   def update
-    
     amount = params[:amount]
     if not amount
       render :json => {message: 'Missing new amount'}, status: :bad_request and return
@@ -83,6 +82,14 @@ class BillsController < ApplicationController
     else
       render :json => {message: 'Failed to settle the bill'}, status: :bad_request and return
     end
+  end
+  
+  def grab_unpaid_bills
+    @bills = @cur_user.unpaid_bills  
+  end
+  
+  def grab_unrec_bills
+    @bills = @cur_user.unrec_bills
   end
   
   private
