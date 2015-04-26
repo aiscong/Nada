@@ -14,8 +14,16 @@ class User < ActiveRecord::Base
   has_many :unrec_bills, class_name: "Bill",
                          foreign_key: "creditor_id",
                          dependent:  :destroy
-                         
- 
+  has_many :friendships
+  has_many :friends, :through => :friendships
+  
+    
+  def sign_in(password)
+    if self.authenticate(password)
+      return true
+    else 
+      return false
+    end
+  end
   #has_many :payers, through: :unrec_bills, class_                       
-                           
 end
