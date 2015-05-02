@@ -8,7 +8,9 @@ class EventsController < ApplicationController
     @event = Event.new(:total => params[:total], :note => params[:note], :name => params[:name])
     #rawString = params[:bills]
     bills = Json.parse(params[:bills])
-    bills.each do 
+    bills.each do |b|
+      bill = @event.build(:creditor_id => params[:creditor_id], :debtor_id => b.debtor_id, :amount => b.amount)
+      bill.save
     end
     @event.save
       render :json => {message: "Successfully created event"}, status: :ok and return
