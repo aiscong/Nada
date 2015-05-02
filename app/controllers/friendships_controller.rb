@@ -34,6 +34,9 @@ class FriendshipsController < ApplicationController
     render :show
   end
   
+  def get_friend_list
+    @friends = @cur_user.friends
+  end
   private
     def sign_in_user
       cur_user_id = params[:cur_user_id]
