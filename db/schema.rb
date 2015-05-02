@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150424212305) do
+ActiveRecord::Schema.define(version: 20150502023233) do
 
   create_table "bills", force: :cascade do |t|
     t.integer  "creditor_id"
@@ -21,10 +21,20 @@ ActiveRecord::Schema.define(version: 20150424212305) do
     t.decimal  "amount",       default: 0.0
     t.boolean  "settled",      default: false
     t.datetime "settled_date"
+    t.integer  "events_id"
   end
 
   add_index "bills", ["creditor_id"], name: "index_bills_on_creditor_id"
   add_index "bills", ["debtor_id"], name: "index_bills_on_debtor_id"
+  add_index "bills", ["events_id"], name: "index_bills_on_events_id"
+
+  create_table "events", force: :cascade do |t|
+    t.decimal  "total"
+    t.string   "name"
+    t.text     "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "friendships", force: :cascade do |t|
     t.integer  "user_id"
