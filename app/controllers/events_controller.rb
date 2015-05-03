@@ -6,14 +6,18 @@ class EventsController < ApplicationController
     # t.integer  "creditor_id", t.integer  "debtor_id"
   def create
     @event = Event.new(:total => params[:total], :note => params[:note], :name => params[:name])
-    #rawString = params[:bills]
-    bills = Json.parse(params[:bills])
-    bills.each do |b|
-      bill = @event.build(:creditor_id => params[:creditor_id], :debtor_id => b.debtor_id, :amount => b.amount)
-      bill.save
-    end
     @event.save
-      render :json => {message: "Successfully created event"}, status: :ok and return
+    #rawString = params[:bills]
+    bs = params[:bills]
+    bs.each do |b|
+       #render :json => {message: params[:creditor_id]}, status: :ok and return
+       bill = @event.bills.create(creditor_id: params[:creditor_id], 
+          debtor_id: b["debtor_id"], 
+          amount: b["amount"])
+       bill.save
+   end
+    
+    render :json => {message: "Successfully created event"}, status: :ok and return
   end
   
   def destroy

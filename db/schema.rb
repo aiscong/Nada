@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150502023233) do
+ActiveRecord::Schema.define(version: 20150503013904) do
 
   create_table "bills", force: :cascade do |t|
     t.integer  "creditor_id"
@@ -21,12 +21,12 @@ ActiveRecord::Schema.define(version: 20150502023233) do
     t.decimal  "amount",       default: 0.0
     t.boolean  "settled",      default: false
     t.datetime "settled_date"
-    t.integer  "events_id"
+    t.integer  "event_id"
   end
 
   add_index "bills", ["creditor_id"], name: "index_bills_on_creditor_id"
   add_index "bills", ["debtor_id"], name: "index_bills_on_debtor_id"
-  add_index "bills", ["events_id"], name: "index_bills_on_events_id"
+  add_index "bills", ["event_id"], name: "index_bills_on_event_id"
 
   create_table "events", force: :cascade do |t|
     t.decimal  "total"
