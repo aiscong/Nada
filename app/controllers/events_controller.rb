@@ -15,9 +15,9 @@ class EventsController < ApplicationController
           debtor_id: b["debtor_id"], 
           amount: b["amount"])
        bill.save
-   end
-    
-    render :json => {message: "Successfully created event"}, status: :ok and return
+    end
+    @bills = @event.bills
+    render :show
   end
   
   def destroy
