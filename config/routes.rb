@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get 'friendships/create'
 
   get 'friendships/destroy'
-
+  resources :events
   resources :users
   resources :bills
   resources :friendships

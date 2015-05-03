@@ -25,5 +25,5 @@ class User < ActiveRecord::Base
       return false
     end
   end
-  #has_many :payers, through: :unrec_bills, class_                       
+  #has_many :payers, through: :unrec_bills, class_
 end

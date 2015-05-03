@@ -1,6 +1,9 @@
 class BillsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :sign_in_user
+  def new
+    @bill = Bill.new
+  end
   def create
     creditor_user = User.find_by_id(params[:creditor_id])
     unless creditor_user.present?
@@ -62,7 +65,6 @@ class BillsController < ApplicationController
         render :json => {message: 'Update failed'}, status: :bad_request and return
       end
     end
-    
     render :json => {message: 'Invalid operation - Bill update'}, status: :bad_request and return
   end
   
