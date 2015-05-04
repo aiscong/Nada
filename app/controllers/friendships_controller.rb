@@ -9,7 +9,8 @@ class FriendshipsController < ApplicationController
     end
     @friend = friend
     @friendship = @cur_user.friendships.build(friend_id: @friend.id)
-    if @friendship.save
+    @friendship_reverse = @friend.friendships.build(friend_id: @cur_user.id)
+    if @friendship.save and @friendship_reverse.save
       render :show
     else
       render :json => {message: 'Failed to build friendship'}, status: :bad_request and return
@@ -25,14 +26,14 @@ class FriendshipsController < ApplicationController
     end
   end
   
-  def search_friendship
-    friendship = @cur_user.friendships.find_by_friend_id(params[:friend_id])
-    unless friendship.present?
-      render :json => {message: 'Unable to find the friendship'}, status: :bad_request and return
-    end
-    @friendship = friendship
-    render :show
-  end
+  #def search_friendship
+   # friendship = @cur_user.friendships.find_by_friend_id(params[:friend_id])
+    #unless friendship.present?
+  #    render :json => {message: 'Unable to find the friendship'}, status: :bad_request and return
+   # end
+  #  @friendship = friendship
+    #render :show
+  #end
   
   def get_friend_list
     @friends = @cur_user.friends
