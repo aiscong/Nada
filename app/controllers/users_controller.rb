@@ -94,6 +94,7 @@ class UsersController < ApplicationController
       render :json => {message: 'User not found with that email'}, status: :bad_request and return
     end
     @user = user
+    render :show
   end
 
 
