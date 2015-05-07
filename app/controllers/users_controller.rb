@@ -1,3 +1,4 @@
+require 'gcm'
 class UsersController < ApplicationController
   protect_from_forgery
   before_action :set_user, only: [:show, :edit, :update, :destroy]
@@ -96,7 +97,20 @@ class UsersController < ApplicationController
     @user = user
     render :show
   end
-
+  
+  def pushReminder
+    gcm = new GCM("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8");
+    reg_ids = [params[:c_rid], params[:d_rid]]
+    options = {
+      data: {
+        data: {
+          content: "Yo"
+        }
+      }
+    }
+    response = gcm.send(reg_ids, options)
+    render :json => {message: "successfully sent"}, status: :ok and return
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
