@@ -82,7 +82,7 @@ class UsersController < ApplicationController
     unless user.authenticate(password)
       render :json => {message: 'Invalid password for user'}, status: :bad_request and return
     end
-    @user = user
+    render :show
   end
   
   def searchUser
@@ -99,13 +99,15 @@ class UsersController < ApplicationController
   end
   
   def pushReminder
-    gcm = new GCM("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8");
+    
+    gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
+    user = User.find(params[:creditor_id])
+    message = user.name + " reminds you to pay the bill"
     reg_ids = [params[:c_rid], params[:d_rid]]
     options = {
       data: {
-        data: {
-          content: "Yo"
-        }
+          title: "Reminder",
+          body:  message
       }
     }
     response = gcm.send(reg_ids, options)
