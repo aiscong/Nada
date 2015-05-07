@@ -11,6 +11,9 @@ class FriendshipsController < ApplicationController
     @friendship = @cur_user.friendships.build(friend_id: @friend.id)
     @friendship_reverse = @friend.friendships.build(friend_id: @cur_user.id)
     if @friendship.save and @friendship_reverse.save
+      @list = Array.new
+      @list.push @friendship
+      @list.push @friendship_reverse
       render :show
     else
       render :json => {message: 'Failed to build friendship'}, status: :bad_request and return

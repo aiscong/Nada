@@ -102,7 +102,7 @@ class UsersController < ApplicationController
   def pushReminder
     
     gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
-    message = user.name + " reminds you to pay the bill of amount $" + Bill.find_by_id(params[:bill_id]).amount
+    message = params[:creditor_name] + " reminds you to pay the bill of amount $" + Bill.find_by_id(params[:bill_id]).amount.round(2).to_s
     reg_ids = [params[:c_rid], params[:d_rid]]
     options = {
       data: {
