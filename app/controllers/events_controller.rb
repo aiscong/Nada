@@ -21,7 +21,8 @@ class EventsController < ApplicationController
   end
   
   def destroy
-    
+    @event.destroy
+    render :json => {message: "Successfully deleted Event"}, status: :ok and return
   end
   
   private
@@ -39,5 +40,4 @@ class EventsController < ApplicationController
       end
       @cur_user = cur_user
     end
-  
 end
