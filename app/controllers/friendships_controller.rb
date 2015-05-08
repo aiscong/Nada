@@ -29,18 +29,19 @@ class FriendshipsController < ApplicationController
     end
   end
   
-  #def search_friendship
-   # friendship = @cur_user.friendships.find_by_friend_id(params[:friend_id])
-    #unless friendship.present?
-  #    render :json => {message: 'Unable to find the friendship'}, status: :bad_request and return
-   # end
-  #  @friendship = friendship
-    #render :show
-  #end
+  def search_friendship
+    friendship = @cur_user.friendships.find_by_friend_id(params[:friend_id])
+    unless friendship.present?
+      render :json => {message: 'Unable to find the friendship'}, status: :bad_request and return
+    end
+    @friendship = friendship
+    render :show
+  end
   
   def get_friend_list
     @friends = @cur_user.friends
   end
+  
   private
     def sign_in_user
       cur_user_id = params[:cur_user_id]
