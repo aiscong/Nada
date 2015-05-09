@@ -20,6 +20,20 @@ class EventsController < ApplicationController
     render :show
   end
   
+  def update
+    event = Event.find_by_id(params[:id])
+    
+    unless event.present?
+      render :json => {message: 'Unable to find the Event'}, status: :bad_request and return
+    end
+    @event = event
+    if @event.update_attribute(:name, params[:name]) and @event.update_attribute(:note, params[:note])
+      render :show
+    else
+      render :json => {message: 'failed to update the event'}, status: :bad_request and return
+    end 
+  end
+  
   def destroy
     @event.destroy
     render :json => {message: "Successfully deleted Event"}, status: :ok and return
