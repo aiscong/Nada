@@ -43,14 +43,14 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user } and return
-      else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :bad_request } and return
-      end
+    unless @user.authenticate(params[:old_password])
+      render :json => { message: 'Original password not correct'}, status: :bad_request and return
+    end
+    
+    if @user.update_attribute(:name, params[:name]) and @user.update_attribute(:password, params[:password])
+      render :show
+    else
+      render :json => {message: 'Failed to update user info'}, status: :bad_request and return
     end
   end
 
