@@ -21,10 +21,21 @@ class FriendshipsController < ApplicationController
   end
 
   def destroy
-    @friendship = Friendship.find(params[:id])
-    reverse_id = @friendship.friend_id
-    @reverse_friendship = User.find_by_id(reverse_id).friendships.find_by_friend_id(params[:cur_user_id])
+    @friendship = Friendship.find_by_id(params[:id])
+    unless @friendship.present?
+      render :json => {message: 'unable to find friendship'}, status: :bad_request and return
+    end
     
+    unless params[:cur_user_id] == @friendship.user_id
+      render :json => {message: 'user id of friendship does not match current user id'}, status: :bad_request and return
+    end
+    
+    reverse_id = @friendship.friend_id
+    
+    @reverse_friendship = User.find_by_id(reverse_id).friendships.find_by_friend_id(params[:cur_user_id])
+    unless @reverse_friendship.present?
+      render :json => {message: 'unable to find reverse_friendship'}, status: :bad_request and return
+    end
     
     if @friendship.destroy and @reverse_friendship.destroy
       render :json => {message: 'Unfriend successfully'}, status: :ok and return
@@ -38,7 +49,6 @@ class FriendshipsController < ApplicationController
     unless friendship.present?
       render :json => {message: 'Unable to find the friendship'}, status: :bad_request and return
     end
-  
     render :show
   end
   
