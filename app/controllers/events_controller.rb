@@ -42,14 +42,27 @@ class EventsController < ApplicationController
     render :show
   end
   
+  def get_event_list
+    debtor_bills = @cur_user.unpaid_bills
+    creditor_bills = @cur_user.unrec_bills
+    @event_list = Array.new
+    debtor_bills.each do |db|
+      @event_list.push(Event.find_by_id(db.event_id))
+    end
+    creditor_bills.each do |cb|
+      @event_list.push(Event.find_by_id(cb.event_id))
+    end
+    
+  end 
+  
   def update
     event = Event.find_by_id(params[:id])
-    
+     
     unless event.present?
       render :json => {message: 'Unable to find the Event'}, status: :bad_request and return
     end
     @event = event
-    if @event.update_attribute(:name, params[:name]) and @event.update_attribute(:note, params[:note])
+    if @event.update_attribute(:name, params[:name])
       render :show
     else
       render :json => {message: 'failed to update the event'}, status: :bad_request and return

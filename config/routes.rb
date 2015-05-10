@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :users
   resources :bills
   resources :friendships
+  post 'events/event_list' => 'events#get_event_list'
   post 'friendships/search' => 'friendships#search_friendship'
   post 'bills/settle' => 'bills#settle'
   post 'users/authenticate' => 'users#authenticate'
