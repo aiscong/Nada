@@ -1,3 +1,4 @@
+require 'gcm'
 class EventsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :sign_in_user
@@ -6,13 +7,38 @@ class EventsController < ApplicationController
     @event = Event.new(:total => params[:total], :note => params[:note], :name => params[:name])
     @event.save
     #rawString = params[:bills]
+    gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
+    cid = "APA91bErY9xndMim8bFP6Nb0icScpiaUAUSS3R58XgRkJyhXEQVDPN918Ei_3lW4QNKXN
+          5YFYpwICLWDV084_ocuTtwTutlXk7KOJt3y8-UXWfQjFdYmQud3-oY2DGpJTyjNXsypi9k7t1Ihuyf4MMUs4Q4tvRxk8w"
+    messageCreditor = "You are added in group bill " + @event.name      
+    creditor = User.find_by_id(params[:creditor_id])
+    reg_ids_creditor = [cid, creditor.reg_id]
+    messageCreditor = "You are added in group bill " + @event.name + " receiving $" + 
+    @event.total.round(2).to_s
+    optionsCreditor = {
+      data: {
+            title: "Reminder",
+            body:  messageCreditor
+        }
+    }
+    response = gcm.send(reg_ids_creditor, optionsCreditor)
     bs = params[:bills]
     bs.each do |b|
-       #render :json => {message: params[:creditor_id]}, status: :ok and return
-       bill = @event.bills.create(creditor_id: params[:creditor_id], 
+      bill = @event.bills.create(creditor_id: params[:creditor_id], 
           debtor_id: b["debtor_id"], 
           amount: b["amount"])
-       bill.save
+      bill.save
+      messageDebtor= "You are added in group bill " + @event.name + " paying $" + 
+      bill.amount.round(2).to_s
+      debtor = User.find_by_id(bill.debtor_id)
+      reg_ids_debtor = [creditor.reg_id, debtor.reg_id]
+      optionsDebtor = {
+        data: {
+            title: "Reminder",
+            body:  messageDebtor
+        }
+      }
+      response = gcm.send(reg_ids_debtor, optionsDebtor)
     end
     @bills = @event.bills
     render :show

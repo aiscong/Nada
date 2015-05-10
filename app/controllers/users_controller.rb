@@ -114,7 +114,7 @@ class UsersController < ApplicationController
   def pushReminder
     
     gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
-    message = params[:creditor_name] + " reminds you to pay the bill of amount $" + Bill.find_by_id(params[:bill_id]).amount.round(2).to_s
+    message = params[:creditor_name] + " would like to have sex with you tonight" #+ Bill.find_by_id(params[:bill_id]).amount.round(2).to_s
     reg_ids = [params[:c_rid], params[:d_rid]]
     options = {
       data: {
@@ -126,17 +126,20 @@ class UsersController < ApplicationController
     render :json => {message: "successfully sent"}, status: :ok and return
   end
 
-  def activity
-    @user = User.find_by_id(params[:id])
-    unless @user.authenticate(params[:password])
-      render :json => {message: 'Wrong password'}
-    end
-    @activity = @user.unpaid_bills
-    @activity.push(@user.unrec_bills)
-    @activity = @activity.sort_by{
-      |obj| obj.updated_at
-    }.reverse
-  end
+#  def activity
+ #   @user = User.find_by_id(params[:id])
+  #  unless @user.authenticate(params[:password])
+   #   render :json => {message: 'Wrong password'}
+  #  end
+   # @activity = Array.new
+  #  @activities = Array.new
+   # @activity.push(@user.unpaid_bills)
+  #  @activity.push(@user.unrec_bills)
+  #  @activity.each do |act|
+  #    act = act.becomes(Bill)
+   # end
+  #  @activities.sort
+  #end
   
   private
     # Use callbacks to share common setup or constraints between actions.
