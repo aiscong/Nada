@@ -32,6 +32,8 @@ class BillsController < ApplicationController
     if not amount
       render :json => {message: 'Missing new amount'}, status: :bad_request and return
     end
+    gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
+    updated_msg = "Bill amount got updated from "
     debtor_id = params[:debtor_id]
     if debtor_id and debtor_id == params[:cur_user_id]
       bill = @cur_user.unpaid_bills.find_by_id(params[:id])
@@ -42,7 +44,19 @@ class BillsController < ApplicationController
       if bill.settled == true
         render :json => {message: 'This bill has already been settled'}, status: :bad_request and return
       end
-      if @bill.update_attribute(:amount, amount)
+      @event = Event.find_by_id(@bill.event_id)
+      newTotal = event.total-@bill.amount + amount
+      if @bill.update_attribute(:amount, amount) and @event.update_attribute(:total, newTotal)
+        creditor = User.find_by_id(@bill.creditor_id)
+        updated_msg = updated_msg + @event.name   
+        reg_ids = [creditor.reg_id, @cur_user.reg_id]
+        options = {
+          data: {
+            title: "Reminder",
+            body:  updated_msg
+          }
+        }
+        response = gcm.send(reg_ids, options)
         render :show and return
       else
         render :json => {message: 'Update failed'}, status: :bad_request and return
@@ -59,7 +73,19 @@ class BillsController < ApplicationController
       if bill.settle == true
         render :json => {message: 'This bill has already been settled'}, status: :bad_request and return
       end
-      if @bill.update_attribute(:amount, amount)
+      @event = Event.find_by_id(@bill.event_id)
+      newTotal = event.total-@bill.amount + amount
+      if @bill.update_attribute(:amount, amount) and @event.update_attribute(:total, newTotal)
+        debtor = User.find_by_id(@bill.debtor_id)
+        updated_msg = updated_msg + @event.name   
+        reg_ids = [debtor.reg_id, @cur_user.reg_id]
+        options = {
+          data: {
+            title: "Reminder",
+            body:  updated_msg
+          }
+        }
+        response = gcm.send(reg_ids, options)
         render :show and return
       else
         render :json => {message: 'Update failed'}, status: :bad_request and return

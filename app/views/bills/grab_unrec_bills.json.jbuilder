@@ -1,5 +1,6 @@
 json.unrec_bills @bills do |bill|
   json.id bill.id
+  json.event_id bill.event_id
   json.creditor_id bill.creditor_id
   json.debtor_id bill.debtor_id
   json.amount bill.amount
