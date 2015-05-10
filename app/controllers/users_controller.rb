@@ -39,6 +39,18 @@ class UsersController < ApplicationController
       end
     end
   end
+  
+  def update_reg_id
+    @user = User.find(params[:id])
+    unless @user.authenticate(params[:password])
+      render :json => { message: 'Password not correct'}, status: :bad_request and return
+    end
+    if @user.update_attribute(:reg_id, params[:reg_id])
+      render :json => {message: 'Successfully updated register ID'}, status: :ok and return
+    else
+      render :json => {message: 'Failed to update register ID'}, status: :bad_request and return
+    end
+  end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
@@ -114,6 +126,18 @@ class UsersController < ApplicationController
     render :json => {message: "successfully sent"}, status: :ok and return
   end
 
+  def activity
+    @user = User.find_by_id(params[:id])
+    unless @user.authenticate(params[:password])
+      render :json => {message: 'Wrong password'}
+    end
+    @activity = @user.unpaid_bills
+    @activity.push(@user.unrec_bills)
+    @activity = @activity.sort_by{
+      |obj| obj.updated_at
+    }.reverse
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user

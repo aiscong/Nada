@@ -1,9 +1,7 @@
 class EventsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :sign_in_user
-    #total decimal, name string, note text
-    
-    # t.integer  "creditor_id", t.integer  "debtor_id"
+
   def create
     @event = Event.new(:total => params[:total], :note => params[:note], :name => params[:name])
     @event.save
