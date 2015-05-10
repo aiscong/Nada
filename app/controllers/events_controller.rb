@@ -13,7 +13,7 @@ class EventsController < ApplicationController
     messageCreditor = "You are added in group bill " + @event.name      
     creditor = User.find_by_id(params[:creditor_id])
     reg_ids_creditor = [cid, creditor.reg_id]
-    messageCreditor = "You are added in group bill " + @event.name + " receiving $" + 
+    messageCreditor = "You are added in bill " + @event.name + " receiving $" + 
     @event.total.round(2).to_s
     optionsCreditor = {
       data: {
@@ -28,7 +28,7 @@ class EventsController < ApplicationController
           debtor_id: b["debtor_id"], 
           amount: b["amount"])
       bill.save
-      messageDebtor= "You are added in group bill " + @event.name + " paying $" + 
+      messageDebtor= "You are added in bill " + @event.name + " paying $" + 
       bill.amount.round(2).to_s
       debtor = User.find_by_id(bill.debtor_id)
       reg_ids_debtor = [creditor.reg_id, debtor.reg_id]
