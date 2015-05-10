@@ -102,7 +102,7 @@ class BillsController < ApplicationController
       creditor = User.find_by_id(@bill.creditor_id)
       @event = Event.find_by_id(@bill.event_id)
       gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
-      destroy_msg = "Bill get removed from " + @event.name   
+      destroy_msg = "Bill got removed from " + @event.name   
       reg_ids = [creditor.reg_id, debtor.reg_id]
       options = {
         data: {
