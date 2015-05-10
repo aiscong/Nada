@@ -86,6 +86,30 @@ class BillsController < ApplicationController
     end
   end
   
+  def destroy
+    if @bill.creditor_id != cur_user_id && @bill.debtor_id != cur_user_id
+      render :json => {message: 'You cannot destroy bills not related to you'}, status: :bad_request and return
+    end
+    if @bill.destroy
+      debtor = User.find_by_id(@bill.debtor_id)
+      creditor = User.find_by_id(@bill.creditor_id)
+      @event = Event.find_by_id(@bill.event_id)
+      gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
+      destroy_msg = "Bill get removed from " + @event.name   
+      reg_ids = [creditor.reg_id, debtor.reg_id]
+      options = {
+        data: {
+          title: "Reminder",
+          body:  destroy_msg
+        }
+      }
+      response = gcm.send(reg_ids, options)
+      render :json => {message: 'Successfully destroyed the bill'}, status: :ok and return
+    else
+      render :json => {message: 'Failed to destroy the bill'}, status: :bad_request and return
+    end
+  end
+  
   def grab_unpaid_bills
     @bills = @cur_user.unpaid_bills  
   end

@@ -8,8 +8,6 @@ class EventsController < ApplicationController
     @event.save
     #rawString = params[:bills]
     gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
-    cid = "APA91bErY9xndMim8bFP6Nb0icScpiaUAUSS3R58XgRkJyhXEQVDPN918Ei_3lW4QNKXN
-          5YFYpwICLWDV084_ocuTtwTutlXk7KOJt3y8-UXWfQjFdYmQud3-oY2DGpJTyjNXsypi9k7t1Ihuyf4MMUs4Q4tvRxk8w"
     messageCreditor = "You are added in group bill " + @event.name      
     creditor = User.find_by_id(params[:creditor_id])
     reg_ids_creditor = [creditor.reg_id]
@@ -23,7 +21,6 @@ class EventsController < ApplicationController
     }
     response = gcm.send(reg_ids_creditor, optionsCreditor)
     bs = params[:bills]
-    @detbor
     bs.each do |b|
       bill = @event.bills.create(creditor_id: params[:creditor_id], 
           debtor_id: b["debtor_id"], 
