@@ -87,9 +87,11 @@ class BillsController < ApplicationController
   end
   
   def destroy
+    @bill = Bill.find_by_id(params[:id])
     if @bill.creditor_id != cur_user_id && @bill.debtor_id != cur_user_id
       render :json => {message: 'You cannot destroy bills not related to you'}, status: :bad_request and return
     end
+    
     if @bill.destroy
       debtor = User.find_by_id(@bill.debtor_id)
       creditor = User.find_by_id(@bill.creditor_id)
