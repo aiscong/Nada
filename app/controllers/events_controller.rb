@@ -23,6 +23,7 @@ class EventsController < ApplicationController
     }
     response = gcm.send(reg_ids_creditor, optionsCreditor)
     bs = params[:bills]
+    @detbor
     bs.each do |b|
       bill = @event.bills.create(creditor_id: params[:creditor_id], 
           debtor_id: b["debtor_id"], 
@@ -30,8 +31,8 @@ class EventsController < ApplicationController
       bill.save
       messageDebtor= "You are added in bill " + @event.name + " paying $" + 
       bill.amount.round(2).to_s
-      debtor = User.find_by_id(bill.debtor_id)
-      reg_ids_debtor = [creditor.reg_id, debtor.reg_id]
+      @debtor = User.find_by_id(bill.debtor_id)
+      reg_ids_debtor = [creditor.reg_id, @debtor.reg_id]
       optionsDebtor = {
         data: {
             title: "Reminder",
