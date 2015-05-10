@@ -45,7 +45,7 @@ class BillsController < ApplicationController
         render :json => {message: 'This bill has already been settled'}, status: :bad_request and return
       end
       @event = Event.find_by_id(@bill.event_id)
-      newTotal = event.total-@bill.amount + amount
+      newTotal = @event.total - @bill.amount + BigDecimal(amount)
       if @bill.update_attribute(:amount, amount) and @event.update_attribute(:total, newTotal)
         creditor = User.find_by_id(@bill.creditor_id)
         updated_msg = updated_msg + @event.name   
@@ -70,11 +70,11 @@ class BillsController < ApplicationController
         render :json => {message: 'Bill does not belong to this user creditor'}, status: :bad_request and return
       end
       @bill = bill
-      if bill.settle == true
+      if bill.settled == true
         render :json => {message: 'This bill has already been settled'}, status: :bad_request and return
       end
       @event = Event.find_by_id(@bill.event_id)
-      newTotal = event.total-@bill.amount + amount
+      newTotal = @event.total - @bill.amount + BigDecimal(amount)
       if @bill.update_attribute(:amount, amount) and @event.update_attribute(:total, newTotal)
         debtor = User.find_by_id(@bill.debtor_id)
         updated_msg = updated_msg + @event.name   
