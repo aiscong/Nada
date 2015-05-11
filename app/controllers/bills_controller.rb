@@ -169,7 +169,7 @@ class BillsController < ApplicationController
    
     bs = params[:bills]
     bs.each do |b|
-      bill = Bill.find_by_id(b)
+      bill = Bill.find_by_id(b["id"])
       debtor = User.find_by_id(bill.debtor_id)
       creditor = User.find_by_id(bill.creditor_id)
       event = Event.find_by_id(bill.event_id)
