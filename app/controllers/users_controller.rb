@@ -111,19 +111,7 @@ class UsersController < ApplicationController
     render :show
   end
   
-  def pushReminder
-    gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
-    message = params[:creditor_name] + " would like to have sex with you tonight" #+ Bill.find_by_id(params[:bill_id]).amount.round(2).to_s
-    reg_ids = [params[:c_rid], params[:d_rid]]
-    options = {
-      data: {
-          title: "Reminder",
-          body:  message
-      }
-    }
-    response = gcm.send(reg_ids, options)
-    render :json => {message: "successfully sent"}, status: :ok and return
-  end
+
 
 #  def activity
  #   @user = User.find_by_id(params[:id])

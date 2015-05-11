@@ -164,6 +164,29 @@ class BillsController < ApplicationController
     end
   end
   
+  def pushReminder
+    gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
+   
+    bs = params[:bills]
+    bs.each do |b|
+      bill = Bill.find_by_id(b)
+      debtor = User.find_by_id(bill.debtor_id)
+      creditor = User.find_by_id(bill.creditor_id)
+      event = Event.find_by_id(bill.event_id)
+      reg_id = Array.new
+      reg_id.push(debtor.reg_id)
+      message = creditor.name + " reminds you to pay $" + bill.amount.round(2).to_s + " for " + event.name
+      options = {
+        data: {
+          title: "Reminder",
+          body:  message
+        }
+      }
+      response = gcm.send(reg_ids, options)
+    end
+    render :json => {message: "successfully sent"}, status: :ok and return
+  end
+  
   def grab_unpaid_bills
     @bills = @cur_user.unpaid_bills  
   end
