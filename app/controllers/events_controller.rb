@@ -8,10 +8,10 @@ class EventsController < ApplicationController
     @event.save
     #rawString = params[:bills]
     gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
-    messageCreditor = "You are added in group bill " + @event.name      
+    messageCreditor = "You are added in group Bill " + @event.name      
     creditor = User.find_by_id(params[:creditor_id])
     reg_ids_creditor = [creditor.reg_id]
-    messageCreditor = "You are added in bill " + @event.name + " receiving $" + 
+    messageCreditor = "You are added in Bill " + @event.name + " receiving $" + 
     @event.total.round(2).to_s
     optionsCreditor = {
       data: {
@@ -26,7 +26,7 @@ class EventsController < ApplicationController
           debtor_id: b["debtor_id"], 
           amount: b["amount"])
       bill.save
-      messageDebtor= "You are added in bill " + @event.name + " paying $" + 
+      messageDebtor= "You are added in Bill " + @event.name + " paying $" + 
       bill.amount.round(2).to_s
       debtor = User.find_by_id(bill.debtor_id)
       reg_ids_debtor = [debtor.reg_id]
