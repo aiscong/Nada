@@ -100,12 +100,33 @@ class BillsController < ApplicationController
       render :json => {message: 'Failed to find the bill'}, status: :bad_request and return
     end
     @bill = bill
+  
+
     if @bill.settled?
       render :json =>{message: 'The requested bill has already been settled'}, status: :bad_request and return
     end
+    gcm = GCM.new("AIzaSyBTH6oHacwBoMV03oSH1l9aPHdpmA2LSH8")
+  
+    
     @bill.settled = true
     @bill.settled_date = Time.now
     if @bill.save
+      @creditor = User.find_by_id(bill.creditor_id)
+      @detbor = User.find_by_id(bill.debtor_id)
+    
+      settled_msg = "Bill from " + Event.find_by_id(@bill.event_id).name + " of amount " + @bill.amount.round(2).to_s + " is now settled between "  + @creditor.name  + " and "  + @debtor.name
+      
+      reg_ids = [@debtor.reg_id, @creditor.reg_id]
+        
+      options = {
+          data: {
+            title: "Reminder",
+            body:  settled_msg
+        }
+      }
+      
+      response = gcm.send(reg_ids, options)
+    
       render :show, status: :ok and return
     else
       render :json => {message: 'Failed to settle the bill'}, status: :bad_request and return
