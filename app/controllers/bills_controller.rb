@@ -182,7 +182,7 @@ class BillsController < ApplicationController
           body:  message
         }
       }
-      response = gcm.send(reg_ids, options)
+      response = gcm.send(reg_id, options)
     end
     render :json => {message: "successfully sent"}, status: :ok and return
   end
