@@ -114,7 +114,7 @@ class BillsController < ApplicationController
       @creditor = User.find_by_id(bill.creditor_id)
       @debtor = User.find_by_id(bill.debtor_id)
     
-      settled_msg = "Bill from " + Event.find_by_id(@bill.event_id).name + " of amount " + @bill.amount.round(2).to_s + " is now settled between "  + @creditor.name  + " and "  + @debtor.name
+      settled_msg = "Bill from " + Event.find_by_id(@bill.event_id).name + " of amount $" + @bill.amount.round(2).to_s + " is now settled between "  + @creditor.name  + " and "  + @debtor.name
       
       reg_ids = [@debtor.reg_id, @creditor.reg_id]
         
